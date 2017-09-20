@@ -1,0 +1,59 @@
+.single-date-picker {
+  > div {
+    width: 100%;
+  }
+}
+
+.single-date-picker-header {
+  align-items: center;
+  display: inline-flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  margin: 15px 0;
+
+  > h1 {
+    font-size: 1.2em;
+    font-weight: 600;
+  }
+}
+
+.single-date-picker-header-button {
+  border: 1px solid #dedede;
+  border-radius: 3px;
+  color: #aaaaaa;
+  padding: 15px 9px;
+  width: 14.2857142%;
+
+  &:hover {
+    border-color: #bbbbbb;
+  }
+}
+
+.single-date-picker-content {
+  > div.single-date-picker-week-label,
+    div.single-date-picker-day-label {
+    > label {
+      padding: 1em;
+      text-align: center;
+      width: 14.2857142%;
+    }
+  }
+}
+
+.single-date-picker-week-label {
+  display: inline-flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  width: inherit;
+}
+
+.single-date-picker-day-label {
+  display: inline-flex;
+  flex-flow: row wrap;
+  justify-content: flex-start;
+  width: inherit;
+
+  > label {
+    font-weight: 400;
+  }
+}
