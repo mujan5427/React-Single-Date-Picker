@@ -1,3 +1,5 @@
+window.isEmpty = require('is-empty');
+
 import React from 'react';
 import ReactDOM from 'react-dom';
 import SingleDatePicker from './SingleDatePicker';
@@ -5,7 +7,7 @@ import SingleDatePicker from './SingleDatePicker';
 
 ReactDOM.render(
   <div className='root-background'>
-    <SingleDatePicker />
+    <SingleDatePicker days={ 31 } />
   </div>,
   document.getElementById('root')
 );
