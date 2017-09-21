@@ -11,7 +11,7 @@ class SingleDatePicker extends React.Component {
      *                       *
      * * * * * * * * * * * * */
 
-    this.days = 31;
+    this.currentDate = new Date();
 
 
     /* * * * * * * * * * * * *
@@ -21,15 +21,35 @@ class SingleDatePicker extends React.Component {
      * * * * * * * * * * * * */
 
     this.generateDayLabelList = this.generateDayLabelList.bind(this);
+    this.getYear              = this.getYear.bind(this);
+    this.getMonth             = this.getMonth.bind(this);
   }
 
-  generateDayLabelList() {
-    const days       = this.days;
-    const totalCount = days
-    var startCount   = 1;
-    var dayLabelList = [];
 
-    if(!isEmpty(days)) {
+  /* * * * * * * * * * * * *
+   *                       *
+   *    Private Methods    *
+   *                       *
+   * * * * * * * * * * * * */
+
+  generateDayLabelList() {
+    const totalDaysInMonth            = this.getDaysInMonth(this.getYear(), this.getMonth());
+    const weekdayOfFirstDayOfTheMonth = this.getWeekdayByDate(this.getYear(), this.getMonth(), 1);
+    const totalCount                  = totalDaysInMonth
+    var startCount                    = 1;
+    var dayLabelList                  = [];
+
+
+    if(!isEmpty(weekdayOfFirstDayOfTheMonth)) {
+
+      for(startCount; startCount <= weekdayOfFirstDayOfTheMonth; startCount++) {
+        dayLabelList.push(<label></label>);
+      }
+
+      startCount = 1;
+    }
+
+    if(!isEmpty(totalCount)) {
 
       for(startCount; startCount <= totalCount; startCount++) {
         dayLabelList.push(<label>{ startCount }</label>);
@@ -39,18 +59,55 @@ class SingleDatePicker extends React.Component {
     return dayLabelList;
   }
 
-  render() {
-    const days = this.days;
+  getYear() {
+    return this.currentDate.getFullYear();
+  }
 
+  getMonth(dispalyStyle) {
+    const enMappingList = ['january', 'february', 'march', 'april', 'may', 'june',
+                           'july', 'august', 'september', 'october', 'november',
+                           'december'];
+    const zhMappingList = ['一月', '二月', '三月', '四月', '五月', '六月', '七月',
+                           '八月', '九月', '十月', '十一月', '十二月'];
+
+    switch(dispalyStyle) {
+      case 'en':
+        return enMappingList[this.currentDate.getMonth()];
+
+      case 'zh':
+        return zhMappingList[this.currentDate.getMonth()];
+
+      default:
+        return this.currentDate.getMonth() + 1;
+    }
+  }
+
+  getDaysInMonth(year, month) {
+    return new Date(year, month, 0).getDate();
+  };
+
+  getWeekdayByDate(year, month, day) {
+    var month = month - 1;
+
+    return new Date(year, month, day).getDay();
+  }
+
+  render() {
     return (
       <div className='single-date-picker'>
 
         {/* Header */}
         <div className='single-date-picker-header'>
+
+          {/* Last Month Button */}
           <a className='single-date-picker-header-button'>
             <i className='fa fa-angle-left fa-fw' aria-hidden='true'></i>
           </a>
-          <h1>九月 2017</h1>
+
+          {/* Title */}
+          <h1>{`${ this.getMonth('zh') } ${ this.getYear() }`}</h1>
+
+          {/* Next Month Button */}
           <a className='single-date-picker-header-button'>
             <i className='fa fa-angle-right fa-fw' aria-hidden='true'></i>
           </a>
@@ -71,11 +128,9 @@ class SingleDatePicker extends React.Component {
           </div>
 
           {/* Day Label */}
-          { days &&
-            <div className='single-date-picker-day-label'>
-              { this.generateDayLabelList() }
-            </div>
-          }
+          <div className='single-date-picker-day-label'>
+            { this.generateDayLabelList() }
+          </div>
 
         </div>
 
