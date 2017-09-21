@@ -20,9 +20,11 @@ class SingleDatePicker extends React.Component {
      *                       *
      * * * * * * * * * * * * */
 
-    this.generateDayLabelList = this.generateDayLabelList.bind(this);
-    this.getYear              = this.getYear.bind(this);
-    this.getMonth             = this.getMonth.bind(this);
+    this.generateDayLabelList   = this.generateDayLabelList.bind(this);
+    this.getYear                = this.getYear.bind(this);
+    this.getMonth               = this.getMonth.bind(this);
+    this.lastMonthButtonHandler = this.lastMonthButtonHandler.bind(this);
+    this.nextMonthButtonHandler = this.nextMonthButtonHandler.bind(this);
   }
 
 
@@ -43,7 +45,7 @@ class SingleDatePicker extends React.Component {
     if(!isEmpty(weekdayOfFirstDayOfTheMonth)) {
 
       for(startCount; startCount <= weekdayOfFirstDayOfTheMonth; startCount++) {
-        dayLabelList.push(<label></label>);
+        dayLabelList.push(<label key={`placeholder-item-${ startCount }`}></label>);
       }
 
       startCount = 1;
@@ -52,7 +54,7 @@ class SingleDatePicker extends React.Component {
     if(!isEmpty(totalCount)) {
 
       for(startCount; startCount <= totalCount; startCount++) {
-        dayLabelList.push(<label>{ startCount }</label>);
+        dayLabelList.push(<label key={`displayed-item-${ startCount }`}>{ startCount }</label>);
       }
     }
 
@@ -92,6 +94,24 @@ class SingleDatePicker extends React.Component {
     return new Date(year, month, day).getDay();
   }
 
+  lastMonthButtonHandler() {
+    const currentUTCMonth = this.currentDate.getUTCMonth();
+
+    this.currentDate.setUTCMonth(currentUTCMonth - 1);
+
+    // MUST to REMOVE from production environment
+    this.forceUpdate();
+  }
+
+  nextMonthButtonHandler() {
+    const currentUTCMonth = this.currentDate.getUTCMonth();
+
+    this.currentDate.setUTCMonth(currentUTCMonth + 1);
+
+    // MUST to REMOVE from production environment
+    this.forceUpdate();
+  }
+
   render() {
     return (
       <div className='single-date-picker'>
@@ -100,7 +120,7 @@ class SingleDatePicker extends React.Component {
         <div className='single-date-picker-header'>
 
           {/* Last Month Button */}
-          <a className='single-date-picker-header-button'>
+          <a className='single-date-picker-header-button' onClick={ this.lastMonthButtonHandler }>
             <i className='fa fa-angle-left fa-fw' aria-hidden='true'></i>
           </a>
 
@@ -108,7 +128,7 @@ class SingleDatePicker extends React.Component {
           <h1>{`${ this.getMonth('zh') } ${ this.getYear() }`}</h1>
 
           {/* Next Month Button */}
-          <a className='single-date-picker-header-button'>
+          <a className='single-date-picker-header-button' onClick={ this.nextMonthButtonHandler }>
             <i className='fa fa-angle-right fa-fw' aria-hidden='true'></i>
           </a>
         </div>
