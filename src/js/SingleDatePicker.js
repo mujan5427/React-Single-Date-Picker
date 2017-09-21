@@ -4,11 +4,27 @@ class SingleDatePicker extends React.Component {
   constructor (props) {
     super(props);
 
+
+    /* * * * * * * * * * * * *
+     *                       *
+     *    Global Veriable    *
+     *                       *
+     * * * * * * * * * * * * */
+
+    this.days = 31;
+
+
+    /* * * * * * * * * * * * *
+     *                       *
+     *    Method Binding     *
+     *                       *
+     * * * * * * * * * * * * */
+
     this.generateDayLabelList = this.generateDayLabelList.bind(this);
   }
 
   generateDayLabelList() {
-    const { days } = this.props;
+    const days       = this.days;
     const totalCount = days
     var startCount   = 1;
     var dayLabelList = [];
@@ -24,7 +40,7 @@ class SingleDatePicker extends React.Component {
   }
 
   render() {
-    const { days } = this.props;
+    const days = this.days;
 
     return (
       <div className='single-date-picker'>

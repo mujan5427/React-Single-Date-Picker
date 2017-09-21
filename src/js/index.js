@@ -7,7 +7,7 @@ import SingleDatePicker from './SingleDatePicker';
 
 ReactDOM.render(
   <div className='root-background'>
-    <SingleDatePicker days={ 31 } />
+    <SingleDatePicker />
   </div>,
   document.getElementById('root')
 );
