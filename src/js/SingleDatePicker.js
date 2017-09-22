@@ -12,7 +12,7 @@ class SingleDatePicker extends React.Component {
      * * * * * * * * * * * * */
 
     this.state = {
-      seletedDay: undefined,
+      selectedDay: undefined,
       quotaOfThisMonth: {}
     };
 
@@ -38,6 +38,26 @@ class SingleDatePicker extends React.Component {
     this.lastMonthButtonHandler = this.lastMonthButtonHandler.bind(this);
     this.nextMonthButtonHandler = this.nextMonthButtonHandler.bind(this);
     this.generateQuotaList      = this.generateQuotaList.bind(this);
+    this.selectDayLabelHandler  = this.selectDayLabelHandler.bind(this);
+  }
+
+
+  /* * * * * * * * * * * * *
+   *                       *
+   *   Life Cycle Methods  *
+   *                       *
+   * * * * * * * * * * * * */
+
+  componentDidMount() {
+    const year  = this.currentDate.getUTCFullYear();
+    const month = this.currentDate.getUTCMonth();
+    var needToBeModifiedState;
+
+
+    needToBeModifiedState = {quotaOfThisMonth: this.generateQuotaList(year, month)};
+    needToBeModifiedState = Object.assign({}, this.state, needToBeModifiedState);
+
+    this.setState(needToBeModifiedState);
   }
 
 
@@ -48,12 +68,15 @@ class SingleDatePicker extends React.Component {
    * * * * * * * * * * * * */
 
   generateDayLabelList() {
-    const totalDaysInMonth            = this.getDaysInMonth(this.getYear(), this.getMonth());
-    const weekdayOfFirstDayOfTheMonth = this.getWeekdayByDate(this.getYear(), this.getMonth(), 1);
+    const { selectedDay, quotaOfThisMonth } = this.state;
+    const year                        = this.currentDate.getUTCFullYear();
+    const month                       = this.currentDate.getUTCMonth();
+    const totalDaysInMonth            = this.getDaysInMonth(year, month);
+    const weekdayOfFirstDayOfTheMonth = this.getWeekdayByDate(year, month, 1);
     const totalCount                  = totalDaysInMonth
     var startCount                    = 1;
     var dayLabelList                  = [];
-    var activeDayLabel, disableDayLabel;
+    var activeDayLabel, disableDayLabel, day;
 
 
     if(!isEmpty(weekdayOfFirstDayOfTheMonth)) {
@@ -68,9 +91,22 @@ class SingleDatePicker extends React.Component {
     if(!isEmpty(totalCount)) {
       for(startCount; startCount <= totalCount; startCount++) {
 
-        if(this.state.quotaOfThisMonth.hasOwnProperty(startCount)) {
+        // transform specified day to timestamp
+        day = Date.UTC(year, month, startCount);
 
-          // active day label
+        // active day label
+        if(day === selectedDay) {
+          activeDayLabel =
+           <label
+             key={`displayed-item-${ startCount }`}
+             className='day-label-activity day-label-selected'
+           >
+             { startCount }
+           </label>;
+
+          dayLabelList.push(activeDayLabel);
+
+        } else if(quotaOfThisMonth.hasOwnProperty(day)) {
           activeDayLabel =
             <label
               key={`displayed-item-${ startCount }`}
@@ -81,9 +117,8 @@ class SingleDatePicker extends React.Component {
 
           dayLabelList.push(activeDayLabel);
 
+        // disable day label
         } else {
-
-          // disable day label
           disableDayLabel =
             <label
               key={`displayed-item-${ startCount }`}
@@ -105,12 +140,14 @@ class SingleDatePicker extends React.Component {
     const maximumQuota = 20;
     const totalDays    = this.getDaysInMonth(year, month);
     const openDays     = this.getRandomNumber(10, totalDays);
-    var quotaList = {};
-    var propertyName, quota;
+    var quotaList      = {};
+    var propertyName, timestampOfSpecifiedDay, quota;
 
-    openDays.map(item => {
-      propertyName = item.toString();
-      quota        = this.getRandomNumber(1, maximumQuota)[0];
+
+    openDays.map(openDay => {
+      timestampOfSpecifiedDay = Date.UTC(year, month, openDay);
+      propertyName            = timestampOfSpecifiedDay;
+      quota                   = this.getRandomNumber(1, maximumQuota)[0];
 
       quotaList[propertyName] = {
         quota: quota
@@ -123,6 +160,7 @@ class SingleDatePicker extends React.Component {
   getRandomNumber(quantity, maximumValue) {
     var randomNumber;
     var resultList = [];
+
 
     while(resultList.length !== quantity) {
       randomNumber = Math.ceil(Math.random() * maximumValue);
@@ -138,16 +176,21 @@ class SingleDatePicker extends React.Component {
     return resultList;
   }
 
+  // for display
   getYear() {
     return this.currentDate.getFullYear();
   }
 
+  // for display
   getMonth(dispalyStyle) {
+    const defaultMappingList = ['1', '2', '3', '4', '5', '6', '7', '8', '9',
+                               '10', '11', '12'];
     const enMappingList = ['january', 'february', 'march', 'april', 'may', 'june',
                            'july', 'august', 'september', 'october', 'november',
                            'december'];
     const zhMappingList = ['一月', '二月', '三月', '四月', '五月', '六月', '七月',
                            '八月', '九月', '十月', '十一月', '十二月'];
+
 
     switch(dispalyStyle) {
       case 'en':
@@ -157,36 +200,66 @@ class SingleDatePicker extends React.Component {
         return zhMappingList[this.currentDate.getMonth()];
 
       default:
-        return this.currentDate.getMonth() + 1;
+        return defaultMappingList[this.currentDate.getMonth()];
     }
   }
 
   getDaysInMonth(year, month) {
-    return new Date(year, month, 0).getDate();
+    const nextMonth         = month + 1;
+    const lastDayOfTheMonth = Date.UTC(year, nextMonth, 0);
+
+
+    return new Date(lastDayOfTheMonth).getUTCDate();
   };
 
   getWeekdayByDate(year, month, day) {
-    var month = month - 1;
-
-    return new Date(year, month, day).getDay();
+    return new Date(Date.UTC(year, month, day)).getUTCDay();
   }
 
   lastMonthButtonHandler() {
-    const currentUTCMonth = this.currentDate.getUTCMonth();
+    var month = this.currentDate.getUTCMonth();
+    var year, needToBeModifiedState;
 
-    this.currentDate.setUTCMonth(currentUTCMonth - 1);
 
-    // MUST to REMOVE from production environment
-    this.forceUpdate();
+    this.currentDate.setUTCMonth(month - 1);
+
+    year                  = this.currentDate.getUTCFullYear();
+    month                 = this.currentDate.getUTCMonth();
+    needToBeModifiedState = {selectedDay: undefined, quotaOfThisMonth: this.generateQuotaList(year, month)};
+    needToBeModifiedState = Object.assign({}, this.state, needToBeModifiedState);
+
+    this.setState(needToBeModifiedState);
   }
 
   nextMonthButtonHandler() {
-    const currentUTCMonth = this.currentDate.getUTCMonth();
+    var month = this.currentDate.getUTCMonth();
+    var year, needToBeModifiedState;
 
-    this.currentDate.setUTCMonth(currentUTCMonth + 1);
 
-    // MUST to REMOVE from production environment
-    this.forceUpdate();
+    this.currentDate.setUTCMonth(month + 1);
+
+    year                  = this.currentDate.getUTCFullYear();
+    month                 = this.currentDate.getUTCMonth();
+    needToBeModifiedState = {selectedDay: undefined, quotaOfThisMonth: this.generateQuotaList(year, month)};
+    needToBeModifiedState = Object.assign({}, this.state, needToBeModifiedState);
+
+    this.setState(needToBeModifiedState);
+  }
+
+  selectDayLabelHandler(event) {
+    const target      = event.target;
+    const year        = this.currentDate.getUTCFullYear();
+    const month       = this.currentDate.getUTCMonth();
+    const selectedDay = Date.UTC(year, month, Number(target.innerHTML));
+    var needToBeModifiedState;
+
+
+    needToBeModifiedState = {selectedDay: selectedDay};
+    needToBeModifiedState = Object.assign({}, this.state, needToBeModifiedState);
+
+    if(target.className === 'day-label-activity') {
+      this.setState(needToBeModifiedState);
+    }
   }
 
   render() {
@@ -225,7 +298,7 @@ class SingleDatePicker extends React.Component {
           </div>
 
           {/* Day Label */}
-          <div className='single-date-picker-day-label'>
+          <div className='single-date-picker-day-label' onClick={ this.selectDayLabelHandler }>
             { this.generateDayLabelList() }
           </div>
 
