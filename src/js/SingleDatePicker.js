@@ -7,6 +7,18 @@ class SingleDatePicker extends React.Component {
 
     /* * * * * * * * * * * * *
      *                       *
+     *      Local State      *
+     *                       *
+     * * * * * * * * * * * * */
+
+    this.state = {
+      seletedDay: undefined,
+      quotaOfThisMonth: {}
+    };
+
+
+    /* * * * * * * * * * * * *
+     *                       *
      *    Global Veriable    *
      *                       *
      * * * * * * * * * * * * */
@@ -25,6 +37,7 @@ class SingleDatePicker extends React.Component {
     this.getMonth               = this.getMonth.bind(this);
     this.lastMonthButtonHandler = this.lastMonthButtonHandler.bind(this);
     this.nextMonthButtonHandler = this.nextMonthButtonHandler.bind(this);
+    this.generateQuotaList      = this.generateQuotaList.bind(this);
   }
 
 
@@ -40,6 +53,7 @@ class SingleDatePicker extends React.Component {
     const totalCount                  = totalDaysInMonth
     var startCount                    = 1;
     var dayLabelList                  = [];
+    var activeDayLabel, disableDayLabel;
 
 
     if(!isEmpty(weekdayOfFirstDayOfTheMonth)) {
@@ -52,13 +66,76 @@ class SingleDatePicker extends React.Component {
     }
 
     if(!isEmpty(totalCount)) {
-
       for(startCount; startCount <= totalCount; startCount++) {
-        dayLabelList.push(<label key={`displayed-item-${ startCount }`}>{ startCount }</label>);
+
+        if(this.state.quotaOfThisMonth.hasOwnProperty(startCount)) {
+
+          // active day label
+          activeDayLabel =
+            <label
+              key={`displayed-item-${ startCount }`}
+              className='day-label-activity'
+            >
+              { startCount }
+            </label>;
+
+          dayLabelList.push(activeDayLabel);
+
+        } else {
+
+          // disable day label
+          disableDayLabel =
+            <label
+              key={`displayed-item-${ startCount }`}
+            >
+              { startCount }
+            </label>
+
+          dayLabelList.push(disableDayLabel);
+
+        }
       }
     }
 
     return dayLabelList;
+  }
+
+  generateQuotaList(year, month) {
+    const randomNumber = Math.floor((Math.random() * 100) + 1);
+    const maximumQuota = 20;
+    const totalDays    = this.getDaysInMonth(year, month);
+    const openDays     = this.getRandomNumber(10, totalDays);
+    var quotaList = {};
+    var propertyName, quota;
+
+    openDays.map(item => {
+      propertyName = item.toString();
+      quota        = this.getRandomNumber(1, maximumQuota)[0];
+
+      quotaList[propertyName] = {
+        quota: quota
+      }
+    });
+
+    return quotaList;
+  }
+
+  getRandomNumber(quantity, maximumValue) {
+    var randomNumber;
+    var resultList = [];
+
+    while(resultList.length !== quantity) {
+      randomNumber = Math.ceil(Math.random() * maximumValue);
+
+      // breaks one iteration, if the following condition occurs
+      if(resultList.indexOf(randomNumber) !== -1) {
+        continue;
+      }
+
+      resultList.push(randomNumber);
+    }
+
+    return resultList;
   }
 
   getYear() {
