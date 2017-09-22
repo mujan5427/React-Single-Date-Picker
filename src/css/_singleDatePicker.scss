@@ -49,6 +49,7 @@
 }
 
 .single-date-picker-day-label {
+  color: #cccccc;
   display: inline-flex;
   flex-flow: row wrap;
   justify-content: flex-start;
@@ -56,5 +57,23 @@
 
   > label {
     font-weight: 400;
+  }
+}
+
+.day-label-activity {
+  color: #484848;
+  cursor: pointer;
+
+  &:hover {
+    background-color: rgba(#cccccc, .4);
+  }
+}
+
+.day-label-selected {
+  background-color: #3b99f0;   // official-blue
+  color: #ffffff;
+
+  &:hover {
+    background-color: #3b99f0;
   }
 }
