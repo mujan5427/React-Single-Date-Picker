@@ -12,8 +12,8 @@ class SingleDatePicker extends React.Component {
      * * * * * * * * * * * * */
 
     this.state = {
-      selectedDay: undefined,
-      quotaOfThisMonth: {}
+      selectedDay         : undefined,
+      openDaysOfThisMonth : {}
     };
 
 
@@ -54,7 +54,7 @@ class SingleDatePicker extends React.Component {
     var needToBeModifiedState;
 
 
-    needToBeModifiedState = {quotaOfThisMonth: this.generateQuotaList(year, month)};
+    needToBeModifiedState = {openDaysOfThisMonth: this.generateQuotaList(year, month)};
     needToBeModifiedState = Object.assign({}, this.state, needToBeModifiedState);
 
     this.setState(needToBeModifiedState);
@@ -68,7 +68,7 @@ class SingleDatePicker extends React.Component {
    * * * * * * * * * * * * */
 
   generateDayLabelList() {
-    const { selectedDay, quotaOfThisMonth } = this.state;
+    const { selectedDay, openDaysOfThisMonth } = this.state;
     const year                        = this.currentDate.getUTCFullYear();
     const month                       = this.currentDate.getUTCMonth();
     const totalDaysInMonth            = this.getDaysInMonth(year, month);
@@ -95,7 +95,7 @@ class SingleDatePicker extends React.Component {
         oneDayOfThisMonth = Date.UTC(year, month, startCount);
 
         // active day label
-        if(quotaOfThisMonth.hasOwnProperty(oneDayOfThisMonth) && oneDayOfThisMonth === selectedDay) {
+        if(openDaysOfThisMonth.hasOwnProperty(oneDayOfThisMonth) && oneDayOfThisMonth === selectedDay) {
           activeDayLabel =
            <label
              key={`displayed-item-${ startCount }`}
@@ -106,7 +106,7 @@ class SingleDatePicker extends React.Component {
 
           dayLabelList.push(activeDayLabel);
 
-        } else if(quotaOfThisMonth.hasOwnProperty(oneDayOfThisMonth)) {
+        } else if(openDaysOfThisMonth.hasOwnProperty(oneDayOfThisMonth)) {
           activeDayLabel =
             <label
               key={`displayed-item-${ startCount }`}
@@ -225,7 +225,7 @@ class SingleDatePicker extends React.Component {
 
     year                  = this.currentDate.getUTCFullYear();
     month                 = this.currentDate.getUTCMonth();
-    needToBeModifiedState = {selectedDay: undefined, quotaOfThisMonth: this.generateQuotaList(year, month)};
+    needToBeModifiedState = {selectedDay: undefined, openDaysOfThisMonth: this.generateQuotaList(year, month)};
     needToBeModifiedState = Object.assign({}, this.state, needToBeModifiedState);
 
     this.setState(needToBeModifiedState);
@@ -240,7 +240,7 @@ class SingleDatePicker extends React.Component {
 
     year                  = this.currentDate.getUTCFullYear();
     month                 = this.currentDate.getUTCMonth();
-    needToBeModifiedState = {selectedDay: undefined, quotaOfThisMonth: this.generateQuotaList(year, month)};
+    needToBeModifiedState = {selectedDay: undefined, openDaysOfThisMonth: this.generateQuotaList(year, month)};
     needToBeModifiedState = Object.assign({}, this.state, needToBeModifiedState);
 
     this.setState(needToBeModifiedState);
