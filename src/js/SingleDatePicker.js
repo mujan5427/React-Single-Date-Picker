@@ -263,6 +263,8 @@ class SingleDatePicker extends React.Component {
   }
 
   render() {
+    const { selectedDay, openDaysOfThisMonth } = this.state;
+
     return (
       <div className='single-date-picker'>
 
@@ -305,7 +307,11 @@ class SingleDatePicker extends React.Component {
         </div>
 
         {/* Footer */}
-        <div className='single-date-picker-footer'></div>
+        { selectedDay &&
+          <div className='single-date-picker-footer'>
+            {`還剩 ${ openDaysOfThisMonth[selectedDay].quota } 個名額`}
+          </div>
+        }
 
       </div>
     );
