@@ -95,7 +95,7 @@ class SingleDatePicker extends React.Component {
         day = Date.UTC(year, month, startCount);
 
         // active day label
-        if(day === selectedDay) {
+        if(quotaOfThisMonth.hasOwnProperty(day) && day === selectedDay) {
           activeDayLabel =
            <label
              key={`displayed-item-${ startCount }`}
