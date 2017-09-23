@@ -76,7 +76,7 @@ class SingleDatePicker extends React.Component {
     const totalCount                  = totalDaysInMonth
     var startCount                    = 1;
     var dayLabelList                  = [];
-    var activeDayLabel, disableDayLabel, day;
+    var activeDayLabel, disableDayLabel, oneDayOfThisMonth;
 
 
     if(!isEmpty(weekdayOfFirstDayOfTheMonth)) {
@@ -92,10 +92,10 @@ class SingleDatePicker extends React.Component {
       for(startCount; startCount <= totalCount; startCount++) {
 
         // transform specified day to timestamp
-        day = Date.UTC(year, month, startCount);
+        oneDayOfThisMonth = Date.UTC(year, month, startCount);
 
         // active day label
-        if(quotaOfThisMonth.hasOwnProperty(day) && day === selectedDay) {
+        if(quotaOfThisMonth.hasOwnProperty(oneDayOfThisMonth) && oneDayOfThisMonth === selectedDay) {
           activeDayLabel =
            <label
              key={`displayed-item-${ startCount }`}
@@ -106,7 +106,7 @@ class SingleDatePicker extends React.Component {
 
           dayLabelList.push(activeDayLabel);
 
-        } else if(quotaOfThisMonth.hasOwnProperty(day)) {
+        } else if(quotaOfThisMonth.hasOwnProperty(oneDayOfThisMonth)) {
           activeDayLabel =
             <label
               key={`displayed-item-${ startCount }`}
