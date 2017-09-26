@@ -12,7 +12,7 @@
   margin: 15px 0;
 
   > h1 {
-    font-size: 1.2em;
+    font-size: 1.4em;
     font-weight: 600;
   }
 }
@@ -21,7 +21,12 @@
   border: 1px solid #dedede;
   border-radius: 3px;
   color: #aaaaaa;
-  padding: 15px 9px;
+
+  // workaround
+  // cross browser compatibility：margins and paddings on flex items can be resolved against either in Firefox
+  display: table;
+  padding-bottom: calc(7.14285715% - 0.5em);
+  padding-top: calc(7.14285715% - 0.5em);
   text-align: center;
   width: 14.2857142%;
 
@@ -34,26 +39,17 @@
   > div.single-date-picker-week-label,
     div.single-date-picker-day-label {
     > label {
-      padding: 1em;
-      text-align: center;
+      display: inline-flex;
+      justify-content: center;
+      padding-bottom: calc(7.14285715% - 0.5em);
+      padding-top: calc(7.14285715% - 0.5em);
       width: 14.2857142%;
     }
   }
 }
 
-.single-date-picker-week-label {
-  display: inline-flex;
-  flex-flow: row nowrap;
-  justify-content: space-between;
-  width: inherit;
-}
-
 .single-date-picker-day-label {
   color: #cccccc;
-  display: inline-flex;
-  flex-flow: row wrap;
-  justify-content: flex-start;
-  width: inherit;
 
   > label {
     font-weight: 400;
@@ -70,7 +66,9 @@
 }
 
 .day-label-selected {
-  background-color: #3b99f0;   // official-blue
+
+  // official-blue
+  background-color: #3b99f0;
   color: #ffffff;
 
   &:hover {
@@ -80,6 +78,6 @@
 
 .single-date-picker-footer {
   font-size: 1.1em;
-  margin-top: 30px;
+  margin-top: 20px;
   text-align: right;
 }
