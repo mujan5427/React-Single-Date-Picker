@@ -277,7 +277,7 @@ class SingleDatePicker extends React.Component {
           </a>
 
           {/* Title */}
-          <h1>{`${ this.getMonth('zh') } ${ this.getYear() }`}</h1>
+          <h1>{`${ this.getYear() }年 ${ this.getMonth() }月`}</h1>
 
           {/* Next Month Button */}
           <a className='single-date-picker-header-button' onClick={ this.nextMonthButtonHandler }>
